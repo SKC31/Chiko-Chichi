@@ -141,6 +141,8 @@ export function Gifts() {
               )}
             </div>
 
+            <p className="choice-or" aria-hidden="true">Or</p>
+
             <div className="choice-col">
               <button
                 type="button"

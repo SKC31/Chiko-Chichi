@@ -1,23 +1,57 @@
-import { useCallback, useRef, useState, type KeyboardEvent, type PointerEvent } from 'react'
+import { useCallback, useEffect, useRef, useState, type KeyboardEvent, type PointerEvent } from 'react'
 import { Rosette } from '@/components/ornaments/Ornaments'
 import { useWedding } from '@/config/WeddingContext'
+
+const AUTOPLAY_MS = 4000
+const RESUME_AFTER_MS = 6000
 
 /**
  * 3D coverflow gallery (the reference design's signature gallery).
  * While no photos are configured it shows elegant placeholders — see src/config/wedding.ts.
+ * Auto-advances on a timer and loops back to the first photo after the last one;
+ * pauses while the guest is actively browsing and resumes shortly after they stop.
  */
 export function Gallery() {
   const c = useWedding()
   const photos = c.gallery.photos
   const count = photos.length > 0 ? photos.length : c.gallery.placeholderCount
   const [active, setActive] = useState(Math.min(1, count - 1))
+  const [paused, setPaused] = useState(false)
   const startX = useRef<number | null>(null)
+  const resumeTimer = useRef<number | null>(null)
 
-  const go = useCallback((i: number) => setActive(Math.max(0, Math.min(count - 1, i))), [count])
+  // Wraps: past the last photo goes to the first, and before the first goes to the last.
+  const go = useCallback((i: number) => setActive(((i % count) + count) % count), [count])
+
+  const pauseThenResume = useCallback(() => {
+    setPaused(true)
+    if (resumeTimer.current) window.clearTimeout(resumeTimer.current)
+    resumeTimer.current = window.setTimeout(() => setPaused(false), RESUME_AFTER_MS)
+  }, [])
+
+  const goUser = useCallback(
+    (i: number) => {
+      go(i)
+      pauseThenResume()
+    },
+    [go, pauseThenResume],
+  )
+
+  useEffect(() => {
+    if (paused || count <= 1) return
+    const id = window.setInterval(() => setActive((a) => (a + 1) % count), AUTOPLAY_MS)
+    return () => window.clearInterval(id)
+  }, [paused, count])
+
+  useEffect(() => {
+    return () => {
+      if (resumeTimer.current) window.clearTimeout(resumeTimer.current)
+    }
+  }, [])
 
   const onKey = (e: KeyboardEvent) => {
-    if (e.key === 'ArrowLeft') go(active - 1)
-    if (e.key === 'ArrowRight') go(active + 1)
+    if (e.key === 'ArrowLeft') goUser(active - 1)
+    if (e.key === 'ArrowRight') goUser(active + 1)
   }
   const onDown = (e: PointerEvent) => {
     startX.current = e.clientX
@@ -26,7 +60,7 @@ export function Gallery() {
     if (startX.current === null) return
     const dx = e.clientX - startX.current
     startX.current = null
-    if (Math.abs(dx) > 40) go(active + (dx < 0 ? 1 : -1))
+    if (Math.abs(dx) > 40) goUser(active + (dx < 0 ? 1 : -1))
   }
 
   return (
@@ -45,6 +79,11 @@ export function Gallery() {
         onPointerDown={onDown}
         onPointerUp={onUp}
         onPointerCancel={() => (startX.current = null)}
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => {
+          if (resumeTimer.current) window.clearTimeout(resumeTimer.current)
+          setPaused(false)
+        }}
       >
         {Array.from({ length: count }, (_, i) => {
           const o = i - active
@@ -55,7 +94,7 @@ export function Gallery() {
               className={`cf__slide${o === 0 ? ' is-active' : ''}`}
               style={{ ['--o' as string]: o, ['--abs' as string]: Math.abs(o) }}
               aria-hidden={o !== 0}
-              onClick={() => o !== 0 && go(i)}
+              onClick={() => o !== 0 && goUser(i)}
             >
               {photo ? (
                 <img src={photo.src} alt={photo.alt} loading="lazy" decoding="async" draggable={false} />
@@ -71,7 +110,7 @@ export function Gallery() {
       </div>
 
       <div className="cf__nav">
-        <button type="button" className="cf__arrow" onClick={() => go(active - 1)} disabled={active === 0} aria-label="Previous photo">
+        <button type="button" className="cf__arrow" onClick={() => goUser(active - 1)} aria-label="Previous photo">
           ‹
         </button>
         <div className="cf__dots" role="tablist" aria-label="Choose photo">
@@ -83,11 +122,11 @@ export function Gallery() {
               aria-selected={i === active}
               aria-label={`Photo ${i + 1} of ${count}`}
               className={`cf__dot${i === active ? ' is-active' : ''}`}
-              onClick={() => go(i)}
+              onClick={() => goUser(i)}
             />
           ))}
         </div>
-        <button type="button" className="cf__arrow" onClick={() => go(active + 1)} disabled={active === count - 1} aria-label="Next photo">
+        <button type="button" className="cf__arrow" onClick={() => goUser(active + 1)} aria-label="Next photo">
           ›
         </button>
       </div>
