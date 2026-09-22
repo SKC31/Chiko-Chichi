@@ -49,7 +49,6 @@ export interface WeddingConfig {
   /** Countdown target: this time on the wedding day, in `timezone`. */
   countdownTime: string
   church: Venue
-  photography: { time: string }
   reception: Venue
   dressCode: Swatch[]
   gifts: {
