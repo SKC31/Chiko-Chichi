@@ -326,6 +326,26 @@ img {
 .cover__btn {
   margin-top: 0.4rem;
 }
+.cover__credit,
+.cover__credit:link,
+.cover__credit:visited {
+  margin-top: 1.6rem;
+  font-family: var(--font-ui);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted) !important;
+  opacity: 0.55;
+  text-decoration: none !important;
+  transition: opacity 0.2s ease, color 0.2s ease;
+}
+.cover__credit:hover,
+.cover__credit:focus-visible,
+.cover__credit:active {
+  opacity: 0.9;
+  color: var(--gold) !important;
+  text-decoration: none !important;
+}
 
 .cover__corners {
   position: absolute;
@@ -1010,6 +1030,27 @@ img {
   font-style: italic;
   text-transform: none;
   color: var(--gold);
+}
+.footer__credit,
+.footer__credit:link,
+.footer__credit:visited {
+  display: inline-block;
+  margin-top: 2.2rem;
+  font-family: var(--font-ui);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted) !important;
+  opacity: 0.55;
+  text-decoration: none !important;
+  transition: opacity 0.2s ease, color 0.2s ease;
+}
+.footer__credit:hover,
+.footer__credit:focus-visible,
+.footer__credit:active {
+  opacity: 0.9;
+  color: var(--gold) !important;
+  text-decoration: none !important;
 }
 .footer__date {
   margin-top: 0.6rem;
