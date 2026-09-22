@@ -132,7 +132,7 @@ export const defaultWedding: WeddingConfig = {
       { src: '/assets/gallery/photo-5.jpg', alt: 'Chikote and Muchimba' },
       { src: '/assets/gallery/photo-6.jpg', alt: 'Chikote and Muchimba' },
       { src: '/assets/gallery/photo-7.jpg', alt: 'Chikote and Muchimba' },
-      { src: '/assets/gallery/photo-8.jpg', alt: 'Chikote and Muchimba' },
+      { src: '/assets/gallery/photo-8v2.jpg', alt: 'Chikote and Muchimba' },
       { src: '/assets/gallery/photo-9v2.jpg', alt: 'Chikote and Muchimba' },
       // { src: '/assets/gallery/photo-1.jpg', alt: 'Chikote and Muchimba' },
     ],
