@@ -12,7 +12,8 @@ export function DashboardPage() {
     const w = wishes.data ?? []
     const bring = active.filter((g) => g.gift?.method === 'bring_to_wedding')
     return {
-      total: active.length,
+      invites: active.length,
+      total: active.reduce((n, g) => n + (g.allowed_guests || 1), 0),
       opened: active.filter((g) => g.opened_at || g.invitation_status === 'opened' || g.invitation_status === 'responded').length,
       responded: active.filter((g) => g.rsvp_status !== 'pending').length,
       attending: active.filter((g) => g.rsvp_status === 'attending').length,
@@ -34,7 +35,7 @@ export function DashboardPage() {
   const loading = (guests.loading && !guests.data) || (wishes.loading && !wishes.data)
 
   const cards: [string, number | string, string?][] = [
-    ['Total invitations', s.total],
+    ['Total invitations', s.total, `${s.invites} sent`],
     ['Invitations opened', s.opened],
     ['Responded', s.responded],
     ['Attending', s.attending, `${s.attendees} people`],
