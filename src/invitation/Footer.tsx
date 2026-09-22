@@ -15,6 +15,15 @@ export function Footer() {
       <p className="footer__date">{formatLongDate(c)}</p>
       <CornerOrnament corner="bl" size={100} className="sec__corner sec__corner--bl" />
       <CornerOrnament corner="br" size={100} className="sec__corner sec__corner--br" />
+
+      <a
+        href="https://voltbitsoftware.com/"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="footer__credit"
+      >
+        Made by VOLTBIT Software
+      </a>
     </footer>
   )
 }

@@ -70,6 +70,15 @@ export function Cover({ phase, guestName, ready, onOpen }: Props) {
         >
           {ready ? 'Open invitation' : 'Preparing…'}
         </button>
+
+        <a
+          href="https://voltbitsoftware.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="cover__credit"
+        >
+          Made by VOLTBIT Software
+        </a>
       </div>
     </div>
   )
