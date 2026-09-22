@@ -100,7 +100,7 @@ export const defaultWedding: WeddingConfig = {
 
   dressCode: [
     { name: 'Black', hex: '#111111' },
-    { name: 'Olive Green', hex: '#556B2F' },
+    { name: 'Sage Green', hex: '#A3B18A' },
     { name: 'White', hex: '#FFFFFF' },
     { name: 'Champagne Gold', hex: '#F7E7CE' },
   ],
@@ -137,7 +137,7 @@ export const defaultWedding: WeddingConfig = {
       { src: '/assets/gallery/photo-10.jpg', alt: 'Chikote and Muchimba' },
       // { src: '/assets/gallery/photo-1.jpg', alt: 'Chikote and Muchimba' },
     ],
-    placeholderCount: 6,
+    placeholderCount: 10,
   },
 
   heroPhoto: '/assets/gallery/couple.jpg',

@@ -7,7 +7,7 @@ export function DressCode() {
       <h2 className="sec__title" id="dress-title">
         Dress Code
       </h2>
-      <p className="sec__intro">We would be delighted to see you in our wedding colours.</p>
+      <p className="sec__intro">We would be delighted to see you in our wedding colours.(Optional)</p>
       <ul className="dresscode__list">
         {c.dressCode.map((s) => (
           <li key={s.name} className="dresscode__item">

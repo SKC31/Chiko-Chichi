@@ -240,7 +240,8 @@ img {
   z-index: 100;
   display: grid;
   place-items: center;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .cover__gate {
@@ -287,6 +288,7 @@ img {
   z-index: 2;
   width: min(100%, 520px);
   padding: 2rem 1.5rem;
+  margin: auto;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -732,6 +734,11 @@ img {
 }
 .choice-row--stack {
   flex-direction: column;
+}
+.choice-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
 }
 .choice {
   flex: 1 1 200px;
