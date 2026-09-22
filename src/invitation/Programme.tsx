@@ -28,7 +28,7 @@ export function Programme() {
   const c = useWedding()
   const items: Item[] = [
     { time: c.church.time, label: 'Church', place: c.church.name, venue: c.church },
-    { time: c.photography.time, label: 'Photographs' },
+    
     {
       time: c.reception.time,
       label: 'Reception',
