@@ -89,14 +89,11 @@ export const defaultWedding: WeddingConfig = {
     directionsUrl: '',
   },
 
-  photography: {
-    time: '12:00',
-  },
 
   reception: {
     name: 'Lota Lodge',
     location: 'Chalala',
-    time: '16:00',
+    time: '14:00',
     // ► TO ADD LATER: exact Google Maps link for the lodge.
     mapUrl: '',
     directionsUrl: '',
@@ -112,13 +109,13 @@ export const defaultWedding: WeddingConfig = {
   gifts: {
     headline: 'Your presence is the greatest gift.',
     message:
-      'For those who wish to bless the couple, we kindly request that all gifts be in monetary form.',
+      'We kindly request that all gifts be in monetary form.',
     mobileMoney: {
-      // ► TO ADD LATER: the couple's Mobile Money details. Empty fields show "to be added".
-      provider: '',
-      number: '',
-      accountName: '',
-      instructions: '',
+      
+      provider: 'MTN Money',
+      number: '+260963448837',
+      accountName: 'Chikote Sikelete',
+      instructions: 'Use your name as the reference',
     },
   },
 
