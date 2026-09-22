@@ -558,14 +558,64 @@
 
 /* Card-style table on narrow screens */
 @media (max-width: 760px) {
+  /* ---- stacked mobile top bar ---- */
+  .a-top {
+    padding: 12px 16px;
+    row-gap: 10px;
+  }
+
+  .a-brand {
+    order: 1;
+    font-size: 1rem;
+    flex: 1 1 auto;
+  }
+
+  .a-top > .a-btn {
+    order: 2;
+    flex: 0 0 auto;
+  }
+
+  .a-nav {
+    order: 3;
+    flex: 1 1 100%;
+    gap: 6px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(247, 231, 206, 0.15);
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .a-nav__link {
+    flex: 0 0 auto;
+    white-space: nowrap;
+    padding: 7px 12px;
+    font-size: 0.85rem;
+  }
+
+  .a-main {
+    padding: 20px 14px 48px;
+    gap: 16px;
+  }
+
+  .a-table-wrap {
+    border: none;
+    background: transparent;
+    border-radius: 0;
+    overflow: visible;
+  }
+
   .a-table--cards thead {
     display: none;
   }
 
   .a-table--cards tr {
     display: block;
-    padding: 12px 14px;
-    border-bottom: 1px solid #f0ead8;
+    padding: 14px 14px 12px;
+    margin-bottom: 10px;
+    border: 1px solid #e7e0cc;
+    border-radius: 12px;
+    background: #fff;
   }
 
   .a-table--cards td {
@@ -573,24 +623,36 @@
     justify-content: space-between;
     align-items: flex-start;
     gap: 12px;
-    padding: 5px 0;
-    border-bottom: none;
+    padding: 7px 0;
+    border-bottom: 1px solid #f3efe1;
     text-align: right;
+  }
+
+  .a-table--cards td:last-child {
+    border-bottom: none;
+    padding-top: 10px;
   }
 
   .a-table--cards td::before {
     content: attr(data-label);
-    font-size: 0.72rem;
+    font-size: 0.68rem;
     text-transform: uppercase;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.04em;
     color: #9a9278;
     font-weight: 600;
     text-align: left;
     flex-shrink: 0;
+    padding-top: 2px;
   }
 
   .a-table--cards .a-rowactions {
-    justify-content: flex-end;
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .a-table--cards .a-rowactions .a-btn {
+    flex: 1 1 calc(50% - 6px);
+    justify-content: center;
   }
 
   .a-grid {
