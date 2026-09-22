@@ -45,7 +45,7 @@ export function Rsvp() {
           {guest.rsvp_status === 'attending' ? (
             <p>
               {justSaved ? 'Your reply is saved. ' : ''}
-              You are attending with <strong>{guest.attendee_count}</strong> {guest.attendee_count === 1 ? 'guest' : 'guests'}. We can’t wait to celebrate with you.
+              We can’t wait to celebrate with you.
             </p>
           ) : (
             <p>
