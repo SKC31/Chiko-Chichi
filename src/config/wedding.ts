@@ -141,7 +141,7 @@ export const defaultWedding: WeddingConfig = {
     placeholderCount: 6,
   },
 
-  heroPhoto: '',
+  heroPhoto: '/assets/gallery/couple.jpg',
 }
 
 // ---------------------------------------------------------------------
