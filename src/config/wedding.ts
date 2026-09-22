@@ -125,6 +125,17 @@ export const defaultWedding: WeddingConfig = {
 
   gallery: {
     photos: [
+      { src: '/assets/gallery/couple', alt: 'Chikote and Muchimba' },
+      { src: '/assets/gallery/photo-1.jpg', alt: 'Chikote and Muchimba' },
+      { src: '/assets/gallery/photo-2.jpg', alt: 'Chikote and Muchimba' },
+      { src: '/assets/gallery/photo-3.jpg', alt: 'Chikote and Muchimba' },
+      { src: '/assets/gallery/photo-4.jpg', alt: 'Chikote and Muchimba' },
+      { src: '/assets/gallery/photo-5.jpg', alt: 'Chikote and Muchimba' },
+      { src: '/assets/gallery/photo-6.jpg', alt: 'Chikote and Muchimba' },
+      { src: '/assets/gallery/photo-7.jpg', alt: 'Chikote and Muchimba' },
+      { src: '/assets/gallery/photo-8.jpg', alt: 'Chikote and Muchimba' },
+      { src: '/assets/gallery/photo-9.jpg', alt: 'Chikote and Muchimba' },
+      { src: '/assets/gallery/photo-10.jpg', alt: 'Chikote and Muchimba' },
       // { src: '/assets/gallery/photo-1.jpg', alt: 'Chikote and Muchimba' },
     ],
     placeholderCount: 6,
