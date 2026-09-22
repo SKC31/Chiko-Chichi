@@ -1,0 +1,21 @@
+:root {
+  /* Wedding palette */
+  --olive: #556b2f;
+  --olive-deep: #3f4f23;
+  --olive-night: #2b3719;
+  --black: #111111;
+  --champagne: #f7e7ce;
+  --gold: #c9a227;
+  --gold-deep: #9c7a16;
+  --white: #ffffff;
+
+  /* Text on dark grounds. Champagne on deep olive ≈ 7:1; muted ≈ 5:1 */
+  --text: #f7e7ce;
+  --text-muted: rgba(247, 231, 206, 0.78);
+
+  --font-display: 'Cormorant Garamond', 'Cormorant', 'Times New Roman', serif;
+  --font-ui: 'Jost', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --col: 560px;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
