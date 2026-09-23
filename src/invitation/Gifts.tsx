@@ -61,6 +61,15 @@ export function Gifts() {
     }
   }
 
+  function chooseMobileMoney() {
+    setChoice('mobile_money')
+    setSaved(null)
+    setError('')
+    // Register the choice right away; the fields below are optional extras
+    // they can add afterward.
+    save('mobile_money')
+  }
+
   function chooseBringToWedding() {
     setChoice('bring_to_wedding')
     setSaved(null)
@@ -102,7 +111,7 @@ export function Gifts() {
                 role="radio"
                 aria-checked={choice === 'mobile_money'}
                 className={`choice${choice === 'mobile_money' ? ' is-selected' : ''}`}
-                onClick={() => { setChoice('mobile_money'); setSaved(null); setError('') }}
+                onClick={chooseMobileMoney}
                 disabled={busy}
               >
                 Click here to pay via Mobile Money
@@ -137,15 +146,33 @@ export function Gifts() {
                   <p className="panel__lead panel__lead--sub">Optional — let the couple know it is on its way:</p>
                   <div className="field">
                     <label htmlFor="gift-amount">Amount sent</label>
-                    <input id="gift-amount" inputMode="decimal" autoComplete="off" value={amount} onChange={(e) => setAmount(e.target.value)} />
+                    <input
+                      id="gift-amount"
+                      inputMode="decimal"
+                      autoComplete="off"
+                      value={amount}
+                      onChange={(e) => { setAmount(e.target.value); setSaved(null) }}
+                    />
                   </div>
                   <div className="field">
                     <label htmlFor="gift-phone">Phone number you sent from</label>
-                    <input id="gift-phone" type="tel" autoComplete="tel" value={phone} onChange={(e) => setPhone(e.target.value)} />
+                    <input
+                      id="gift-phone"
+                      type="tel"
+                      autoComplete="tel"
+                      value={phone}
+                      onChange={(e) => { setPhone(e.target.value); setSaved(null) }}
+                    />
                   </div>
                   <div className="field">
                     <label htmlFor="gift-ref">Transaction reference</label>
-                    <input id="gift-ref" maxLength={60} autoComplete="off" value={reference} onChange={(e) => setReference(e.target.value)} />
+                    <input
+                      id="gift-ref"
+                      maxLength={60}
+                      autoComplete="off"
+                      value={reference}
+                      onChange={(e) => { setReference(e.target.value); setSaved(null) }}
+                    />
                   </div>
                 </div>
               )}
@@ -181,7 +208,7 @@ export function Gifts() {
             </p>
           )}
 
-          {choice === 'mobile_money' && (
+          {choice === 'mobile_money' && (amount.trim() !== '' || phone.trim() !== '' || reference.trim() !== '') && (
             <button type="button" className="btn btn--primary" onClick={() => save()} disabled={busy}>
               {busy ? 'Saving…' : 'Save my gift note'}
             </button>
