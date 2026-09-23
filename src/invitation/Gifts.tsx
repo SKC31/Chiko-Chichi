@@ -174,6 +174,24 @@ export function Gifts() {
                       onChange={(e) => { setReference(e.target.value); setSaved(null) }}
                     />
                   </div>
+
+                  {choice === 'mobile_money' && error && (
+                    <p className="notice notice--error" role="alert">
+                      {error}
+                    </p>
+                  )}
+
+                  {choice === 'mobile_money' && (amount.trim() !== '' || phone.trim() !== '' || reference.trim() !== '') && (
+                    <button type="button" className="btn btn--primary" onClick={() => save()} disabled={busy}>
+                      {busy ? 'Saving…' : 'Save my gift note'}
+                    </button>
+                  )}
+
+                  {choice === 'mobile_money' && (saved === 'mobile_money' || (alreadySaved && guest.gift?.method === 'mobile_money')) && !error && (
+                    <p className="notice notice--ok" role="status">
+                      Saved. Thank you — the couple will see that you are sending your gift by Mobile Money.
+                    </p>
+                  )}
                 </div>
               )}
             </div>
@@ -192,35 +210,29 @@ export function Gifts() {
                 Click here to bring money to the wedding
               </button>
 
-              {choice === 'bring_to_wedding' && !saved && (
+              {choice === 'bring_to_wedding' && (
                 <div className="panel">
-                  <p className="panel__lead">
-                    Wonderful. We will let the couple know you will bring your monetary gift to the wedding.
-                  </p>
+                  {!saved && (
+                    <p className="panel__lead">
+                      Wonderful. We will let the couple know you will bring your monetary gift to the wedding.
+                    </p>
+                  )}
+
+                  {error && (
+                    <p className="notice notice--error" role="alert">
+                      {error}
+                    </p>
+                  )}
+
+                  {(saved === 'bring_to_wedding' || (alreadySaved && guest.gift?.method === 'bring_to_wedding')) && !error && (
+                    <p className="notice notice--ok" role="status">
+                      Saved. Thank you — the couple will see that you are bringing your gift to the wedding.
+                    </p>
+                  )}
                 </div>
               )}
             </div>
           </div>
-
-          {error && (
-            <p className="notice notice--error" role="alert">
-              {error}
-            </p>
-          )}
-
-          {choice === 'mobile_money' && (amount.trim() !== '' || phone.trim() !== '' || reference.trim() !== '') && (
-            <button type="button" className="btn btn--primary" onClick={() => save()} disabled={busy}>
-              {busy ? 'Saving…' : 'Save my gift note'}
-            </button>
-          )}
-
-          {(saved || alreadySaved) && !error && (
-            <p className="notice notice--ok" role="status">
-              {(saved ?? guest.gift?.method) === 'mobile_money'
-                ? 'Saved. Thank you — the couple will see that you are sending your gift by Mobile Money.'
-                : 'Saved. Thank you — the couple will see that you are bringing your gift to the wedding.'}
-            </p>
-          )}
         </>
       )}
     </section>
