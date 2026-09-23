@@ -22,19 +22,20 @@ export function Gifts() {
   const [saved, setSaved] = useState<GiftMethod | null>(null)
   const [copied, setCopied] = useState(false)
 
-  async function save() {
-    if (!choice || busy) return
+  async function save(methodOverride?: GiftMethod) {
+    const method = methodOverride ?? choice
+    if (!method || busy) return
     setError('')
 
     let parsedAmount: number | null = null
-    if (choice === 'mobile_money' && amount.trim() !== '') {
+    if (method === 'mobile_money' && amount.trim() !== '') {
       parsedAmount = Number(amount.replace(/,/g, ''))
       if (!Number.isFinite(parsedAmount) || parsedAmount <= 0) {
         setError('Please enter a valid amount, or leave it blank.')
         return
       }
     }
-    if (choice === 'mobile_money' && phone.trim() !== '' && !/^[0-9+ ()-]{7,20}$/.test(phone.trim())) {
+    if (method === 'mobile_money' && phone.trim() !== '' && !/^[0-9+ ()-]{7,20}$/.test(phone.trim())) {
       setError('Please enter a valid phone number, or leave it blank.')
       return
     }
@@ -46,18 +47,26 @@ export function Gifts() {
     setBusy(true)
     try {
       const next = await submitGift(code, {
-        method: choice,
+        method,
         amount: parsedAmount,
-        phone: choice === 'mobile_money' ? phone : null,
-        reference: choice === 'mobile_money' ? reference : null,
+        phone: method === 'mobile_money' ? phone : null,
+        reference: method === 'mobile_money' ? reference : null,
       })
       setGuest(next)
-      setSaved(choice)
+      setSaved(method)
     } catch (e) {
       setError(friendlyError(e))
     } finally {
       setBusy(false)
     }
+  }
+
+  function chooseBringToWedding() {
+    setChoice('bring_to_wedding')
+    setSaved(null)
+    setError('')
+    // Nothing else to fill in for this option, so confirm right away.
+    save('bring_to_wedding')
   }
 
   async function copyNumber() {
@@ -94,8 +103,9 @@ export function Gifts() {
                 aria-checked={choice === 'mobile_money'}
                 className={`choice${choice === 'mobile_money' ? ' is-selected' : ''}`}
                 onClick={() => { setChoice('mobile_money'); setSaved(null); setError('') }}
+                disabled={busy}
               >
-                Send via Mobile Money
+                Click here to pay via Mobile Money
               </button>
 
               {choice === 'mobile_money' && (
@@ -149,12 +159,13 @@ export function Gifts() {
                 role="radio"
                 aria-checked={choice === 'bring_to_wedding'}
                 className={`choice${choice === 'bring_to_wedding' ? ' is-selected' : ''}`}
-                onClick={() => { setChoice('bring_to_wedding'); setSaved(null); setError('') }}
+                onClick={chooseBringToWedding}
+                disabled={busy}
               >
-                Bring money to the wedding
+                Click here to bring money to the wedding
               </button>
 
-              {choice === 'bring_to_wedding' && (
+              {choice === 'bring_to_wedding' && !saved && (
                 <div className="panel">
                   <p className="panel__lead">
                     Wonderful. We will let the couple know you will bring your monetary gift to the wedding.
@@ -170,9 +181,9 @@ export function Gifts() {
             </p>
           )}
 
-          {choice && (
-            <button type="button" className="btn btn--primary" onClick={save} disabled={busy}>
-              {busy ? 'Saving…' : choice === 'mobile_money' ? 'Save my gift note' : 'Let the couple know'}
+          {choice === 'mobile_money' && (
+            <button type="button" className="btn btn--primary" onClick={() => save()} disabled={busy}>
+              {busy ? 'Saving…' : 'Save my gift note'}
             </button>
           )}
 

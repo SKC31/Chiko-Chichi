@@ -16,13 +16,17 @@ export function Rsvp() {
   const [justSaved, setJustSaved] = useState(false)
 
   const showSummary = answered && !editing
+  // Only attending guests with more than one allowed guest need to pick a
+  // headcount before we submit, so only they see a separate "send" step.
+  const needsCountStep = guest.allowed_guests > 1
 
-  async function save() {
-    if (!choice || busy) return
+  async function save(nextChoice?: Choice) {
+    const finalChoice = nextChoice ?? choice
+    if (!finalChoice || busy) return
     setError('')
     setBusy(true)
     try {
-      const next = await submitRsvp(code, choice, choice === 'attending' ? count : null)
+      const next = await submitRsvp(code, finalChoice, finalChoice === 'attending' ? count : null)
       setGuest(next)
       setEditing(false)
       setJustSaved(true)
@@ -30,6 +34,15 @@ export function Rsvp() {
       setError(friendlyError(e))
     } finally {
       setBusy(false)
+    }
+  }
+
+  function choose(next: Choice) {
+    setChoice(next)
+    // Decline never needs extra info, and accept only needs a headcount step
+    // when the invitation allows more than one guest.
+    if (next === 'declined' || !needsCountStep) {
+      save(next)
     }
   }
 
@@ -68,7 +81,8 @@ export function Rsvp() {
               aria-checked={choice === 'attending'}
               aria-label="Confirm attendance"
               className={`choice${choice === 'attending' ? ' is-selected' : ''}`}
-              onClick={() => setChoice('attending')}
+              onClick={() => choose('attending')}
+              disabled={busy}
             >
               Joyfully accept
             </button>
@@ -78,29 +92,24 @@ export function Rsvp() {
               aria-checked={choice === 'declined'}
               aria-label="Decline invitation"
               className={`choice${choice === 'declined' ? ' is-selected' : ''}`}
-              onClick={() => setChoice('declined')}
+              onClick={() => choose('declined')}
+              disabled={busy}
             >
               Regretfully decline
             </button>
           </div>
 
-          {choice === 'attending' && (
+          {choice === 'attending' && needsCountStep && (
             <div className="field">
-              {guest.allowed_guests > 1 ? (
-                <>
-                  <label htmlFor="rsvp-count">Number attending</label>
-                  <select id="rsvp-count" value={count} onChange={(e) => setCount(Number(e.target.value))}>
-                    {Array.from({ length: guest.allowed_guests }, (_, i) => i + 1).map((n) => (
-                      <option key={n} value={n}>
-                        {n} {n === 1 ? 'guest' : 'guests'}
-                      </option>
-                    ))}
-                  </select>
-                  <p className="field__hint">Your invitation is for up to {guest.allowed_guests} guests.</p>
-                </>
-              ) : (
-                <p className="field__hint">This invitation is for 1 guest.</p>
-              )}
+              <label htmlFor="rsvp-count">Number attending</label>
+              <select id="rsvp-count" value={count} onChange={(e) => setCount(Number(e.target.value))}>
+                {Array.from({ length: guest.allowed_guests }, (_, i) => i + 1).map((n) => (
+                  <option key={n} value={n}>
+                    {n} {n === 1 ? 'guest' : 'guests'}
+                  </option>
+                ))}
+              </select>
+              <p className="field__hint">Your invitation is for up to {guest.allowed_guests} guests.</p>
             </div>
           )}
 
@@ -110,9 +119,11 @@ export function Rsvp() {
             </p>
           )}
 
-          <button type="button" className="btn btn--primary" onClick={save} disabled={!choice || busy}>
-            {busy ? 'Saving…' : 'Send my reply'}
-          </button>
+          {choice === 'attending' && needsCountStep && (
+            <button type="button" className="btn btn--primary" onClick={() => save()} disabled={busy}>
+              {busy ? 'Saving…' : 'Send my reply'}
+            </button>
+          )}
           {editing && (
             <button type="button" className="link-btn" onClick={() => setEditing(false)}>
               Cancel
