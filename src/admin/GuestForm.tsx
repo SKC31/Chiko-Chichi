@@ -58,7 +58,7 @@ export function GuestForm({ guest, onCancel, onSaved }: Props) {
 
   return (
     <form className="a-card" onSubmit={submit} noValidate>
-      <h2>{guest ? 'Edit guest' : 'Add a guest'}</h2>
+      <h2 id="guest-form-title">{guest ? 'Edit guest' : 'Add a guest'}</h2>
       <div className="a-grid">
         <div className="a-field">
           <label htmlFor="g-title">Title</label>

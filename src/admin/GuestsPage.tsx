@@ -4,6 +4,7 @@ import type { GuestRow, GuestWithGift } from '@/lib/types'
 import { deleteGuest, listGuests, markInvitationSent, setGuestActive } from '@/services/admin'
 import { GuestForm } from './GuestForm'
 import { InviteLinkPanel } from './InviteLinkPanel'
+import { Modal } from './Modal'
 import { Badge, ErrorBox, giftBadge, inviteBadge, inviteUrl, rsvpBadge, useLoad, whatsappText } from './shared'
 
 type Mode = { kind: 'none' } | { kind: 'create' } | { kind: 'edit'; guest: GuestRow } | { kind: 'created'; guest: GuestRow }
@@ -64,14 +65,16 @@ export function GuestsPage() {
         />
       )}
       {mode.kind === 'edit' && (
-        <GuestForm
-          guest={mode.guest}
-          onCancel={() => setMode({ kind: 'none' })}
-          onSaved={() => {
-            setMode({ kind: 'none' })
-            void reload()
-          }}
-        />
+        <Modal labelledBy="guest-form-title" onClose={() => setMode({ kind: 'none' })}>
+          <GuestForm
+            guest={mode.guest}
+            onCancel={() => setMode({ kind: 'none' })}
+            onSaved={() => {
+              setMode({ kind: 'none' })
+              void reload()
+            }}
+          />
+        </Modal>
       )}
       {mode.kind === 'created' && (
         <InviteLinkPanel guest={mode.guest} onDone={() => setMode({ kind: 'none' })} onSentMarked={() => void reload()} />
