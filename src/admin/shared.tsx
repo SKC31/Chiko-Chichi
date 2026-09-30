@@ -16,7 +16,7 @@ export function whatsappText(guest: Pick<GuestRow, 'display_name' | 'invitation_
   return (
     `Dear ${guest.display_name},\n\n` +
     `You're invited to ${c.groom} & ${c.bride}'s wedding on ${formatLongDate(c)}! \n\n` +
-    `Please open your personal invitation here:\n ${inviteUrl(guest.invitation_code)}\n\n` +
+    `Open your personal invitation here:\n ${inviteUrl(guest.invitation_code)}\n\n` +
     `Please confirm or decline your availability on that page so we can plan accordingly.\n\n` +
     `Sending a gift? Tap "Send via Mobile Money" on the page, or indicate that you'll bring it to the event by clicking that option.`
   )
