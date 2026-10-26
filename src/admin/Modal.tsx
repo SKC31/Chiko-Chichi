@@ -4,6 +4,8 @@ interface Props {
   onClose: () => void
   children: ReactNode
   labelledBy: string
+  /** Wider dialog for tables. */
+  wide?: boolean
 }
 
 /**
@@ -11,7 +13,7 @@ interface Props {
  * have to scroll back to the top of the page to reach a form.
  * Closes on Escape or a click on the dimmed backdrop.
  */
-export function Modal({ onClose, children, labelledBy }: Props) {
+export function Modal({ onClose, children, labelledBy, wide }: Props) {
   const backdropRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -35,7 +37,7 @@ export function Modal({ onClose, children, labelledBy }: Props) {
         if (e.target === backdropRef.current) onClose()
       }}
     >
-      <div className="a-modal" role="dialog" aria-modal="true" aria-labelledby={labelledBy}>
+      <div className={`a-modal${wide ? ' a-modal--wide' : ''}`} role="dialog" aria-modal="true" aria-labelledby={labelledBy}>
         <button type="button" className="a-modal__close" onClick={onClose} aria-label="Close">
           ×
         </button>

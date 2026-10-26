@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { listGuests, listWishes } from '@/services/admin'
+import { Modal } from './Modal'
 import { CATEGORY_OPTIONS, ErrorBox, bringMoneySentence, useLoad } from './shared'
 
 export function DashboardPage() {
@@ -102,17 +103,17 @@ export function DashboardPage() {
       <div className="a-stats">
         {cards.map(([label, value, note]) => {
           const isTotal = label === 'Total invitations'
-          const cls = `a-stat${label === 'Bring money to wedding' && s.bring.length ? ' a-stat--hot' : ''}${isTotal ? ' a-stat--btn' : ''}${isTotal && showTotals ? ' a-stat--active' : ''}`
+          const cls = `a-stat${label === 'Bring money to wedding' && s.bring.length ? ' a-stat--hot' : ''}${isTotal ? ' a-stat--btn' : ''}`
           const inner = (
             <>
               <span className="a-stat__value">{loading ? '…' : value}</span>
               <span className="a-stat__label">{label}</span>
               {note && <span className="a-stat__note">{note}</span>}
-              {isTotal && <span className="a-stat__note">{showTotals ? 'Hide details ▲' : 'Show details ▼'}</span>}
+              {isTotal && <span className="a-stat__note">View details</span>}
             </>
           )
           return isTotal ? (
-            <button type="button" className={cls} key={label} aria-expanded={showTotals} aria-controls="total-details" onClick={() => setShowTotals((v) => !v)}>
+            <button type="button" className={cls} key={label} aria-haspopup="dialog" onClick={() => setShowTotals(true)}>
               {inner}
             </button>
           ) : (
@@ -124,74 +125,76 @@ export function DashboardPage() {
       </div>
 
       {showTotals && (
-        <section className="a-card" id="total-details" aria-label="Invitation details by category">
-          <h2>Invitations by category</h2>
-          <p className="a-hint">
-            {s.invites} invitations covering {s.total} seats. Counts are for active invitations only. “Attending” shows invitations, with the number of people in brackets.
-          </p>
-          <div className="a-table-wrap a-table-wrap--scroll">
-            <table className="a-table a-table--wide">
-              <thead>
-                <tr>
-                  <th>Category</th>
-                  <th>Invitations</th>
-                  <th>Seats allowed</th>
-                  <th>Opened</th>
-                  <th>Responded</th>
-                  <th>Attending</th>
-                  <th>Declined</th>
-                  <th>Pending</th>
-                </tr>
-              </thead>
-              <tbody>
-                {s.catRows.map((r) => (
-                  <tr key={r.key}>
-                    <td>
-                      <strong>{r.label}</strong>
-                    </td>
-                    <td>{r.invites}</td>
-                    <td>{r.seats}</td>
-                    <td>{r.opened}</td>
-                    <td>{r.responded}</td>
-                    <td>
-                      {r.attending} ({r.attendees})
-                    </td>
-                    <td>{r.declined}</td>
-                    <td>{r.pending}</td>
+        <Modal wide labelledBy="total-details-title" onClose={() => setShowTotals(false)}>
+          <section className="a-card" aria-label="Invitation details by category">
+            <h2 id="total-details-title">Invitations by category</h2>
+            <p className="a-hint">
+              {s.invites} invitations covering {s.total} seats. Counts are for active invitations only. “Attending” shows invitations, with the number of people in brackets.
+            </p>
+            <div className="a-table-wrap a-table-wrap--scroll">
+              <table className="a-table a-table--wide">
+                <thead>
+                  <tr>
+                    <th>Category</th>
+                    <th>Invitations</th>
+                    <th>Seats allowed</th>
+                    <th>Opened</th>
+                    <th>Responded</th>
+                    <th>Attending</th>
+                    <th>Declined</th>
+                    <th>Pending</th>
                   </tr>
-                ))}
-                <tr className="a-table__total">
-                  <td>
-                    <strong>Total</strong>
-                  </td>
-                  <td>
-                    <strong>{s.invites}</strong>
-                  </td>
-                  <td>
-                    <strong>{s.total}</strong>
-                  </td>
-                  <td>
-                    <strong>{s.opened}</strong>
-                  </td>
-                  <td>
-                    <strong>{s.responded}</strong>
-                  </td>
-                  <td>
-                    <strong>
-                      {s.attending} ({s.attendees})
-                    </strong>
-                  </td>
-                  <td>
-                    <strong>{s.declined}</strong>
-                  </td>
-                  <td>
-                    <strong>{s.pending}</strong>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </section>
+                </thead>
+                <tbody>
+                  {s.catRows.map((r) => (
+                    <tr key={r.key}>
+                      <td>
+                        <strong>{r.label}</strong>
+                      </td>
+                      <td>{r.invites}</td>
+                      <td>{r.seats}</td>
+                      <td>{r.opened}</td>
+                      <td>{r.responded}</td>
+                      <td>
+                        {r.attending} ({r.attendees})
+                      </td>
+                      <td>{r.declined}</td>
+                      <td>{r.pending}</td>
+                    </tr>
+                  ))}
+                  <tr className="a-table__total">
+                    <td>
+                      <strong>Total</strong>
+                    </td>
+                    <td>
+                      <strong>{s.invites}</strong>
+                    </td>
+                    <td>
+                      <strong>{s.total}</strong>
+                    </td>
+                    <td>
+                      <strong>{s.opened}</strong>
+                    </td>
+                    <td>
+                      <strong>{s.responded}</strong>
+                    </td>
+                    <td>
+                      <strong>
+                        {s.attending} ({s.attendees})
+                      </strong>
+                    </td>
+                    <td>
+                      <strong>{s.declined}</strong>
+                    </td>
+                    <td>
+                      <strong>{s.pending}</strong>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </Modal>
       )}
 
       <section className="a-card">
