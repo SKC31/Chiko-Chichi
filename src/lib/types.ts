@@ -4,7 +4,14 @@ export type GiftMethod = 'mobile_money' | 'bring_to_wedding'
 export type GiftStatus = 'pending' | 'confirmed'
 export type WishStatus = 'pending' | 'approved' | 'rejected'
 /** Admin-only grouping, used for table allocation. Never exposed on the invitation. */
-export type GuestCategory = 'brides_family' | 'grooms_family' | 'grooms_friend' | 'brides_friend'
+export type GuestCategory =
+  | 'guest_of_honor'
+  | 'brides_parents'
+  | 'grooms_parents'
+  | 'brides_family'
+  | 'grooms_family'
+  | 'brides_friend'
+  | 'grooms_friend'
 
 /** What a guest may know about their own invitation (no phone / email / code). */
 export interface GuestGift {

@@ -65,6 +65,9 @@ export const inviteBadge = (s: GuestRow['invitation_status']) =>
   )
 
 export const CATEGORY_OPTIONS: { value: GuestCategory; label: string }[] = [
+  { value: 'guest_of_honor', label: 'Guest of honor' },
+  { value: 'brides_parents', label: "Bride's parents" },
+  { value: 'grooms_parents', label: "Groom's parents" },
   { value: 'brides_family', label: "Bride's family" },
   { value: 'grooms_family', label: "Groom's family" },
   { value: 'brides_friend', label: "Bride's friend" },
@@ -74,7 +77,7 @@ export const CATEGORY_OPTIONS: { value: GuestCategory; label: string }[] = [
 export const categoryLabel = (c: GuestCategory | null) => CATEGORY_OPTIONS.find((o) => o.value === c)?.label ?? 'Uncategorised'
 
 export const categoryBadge = (c: GuestCategory | null) =>
-  c ? <Badge tone={c.startsWith('brides') ? 'gold' : 'warn'}>{categoryLabel(c)}</Badge> : <span className="muted">—</span>
+  c ? <Badge tone={c === 'guest_of_honor' ? 'ok' : c.startsWith('brides') ? 'gold' : 'warn'}>{categoryLabel(c)}</Badge> : <span className="muted">—</span>
 
 export const giftLabel = (m: 'mobile_money' | 'bring_to_wedding') => (m === 'mobile_money' ? 'Mobile Money' : 'Bring Money to Wedding')
 
