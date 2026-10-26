@@ -464,6 +464,31 @@
   gap: 3px;
 }
 
+.a-stat--btn {
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  width: 100%;
+}
+
+.a-stat--btn:hover,
+.a-stat--active {
+  border-color: var(--gold);
+}
+
+.a-table-wrap--scroll {
+  overflow-x: auto;
+}
+
+.a-table--wide {
+  min-width: 640px;
+}
+
+.a-table__total td {
+  background: #faf6e8;
+  border-top: 2px solid #e7e0cc;
+}
+
 .a-stat--hot {
   border-color: var(--gold);
   background: #fffbef;

@@ -1,17 +1,36 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { listGuests, listWishes } from '@/services/admin'
-import { ErrorBox, bringMoneySentence, useLoad } from './shared'
+import { CATEGORY_OPTIONS, ErrorBox, bringMoneySentence, useLoad } from './shared'
 
 export function DashboardPage() {
   const guests = useLoad(listGuests)
   const wishes = useLoad(listWishes)
+  const [showTotals, setShowTotals] = useState(false)
 
   const s = useMemo(() => {
     const active = (guests.data ?? []).filter((g) => g.is_active)
     const w = wishes.data ?? []
     const bring = active.filter((g) => g.gift?.method === 'bring_to_wedding')
+    const blank = () => ({ invites: 0, seats: 0, responded: 0, attending: 0, attendees: 0, declined: 0, pending: 0, opened: 0 })
+    const groups = [...CATEGORY_OPTIONS.map((o) => ({ key: o.value as string, label: o.label })), { key: 'none', label: 'Uncategorised' }]
+    const byCat = Object.fromEntries(groups.map((x) => [x.key, blank()]))
+    for (const g of active) {
+      const r = byCat[g.category ?? 'none']
+      r.invites += 1
+      r.seats += g.allowed_guests || 1
+      if (g.opened_at || g.invitation_status === 'opened' || g.invitation_status === 'responded') r.opened += 1
+      if (g.rsvp_status !== 'pending') r.responded += 1
+      if (g.rsvp_status === 'pending') r.pending += 1
+      if (g.rsvp_status === 'declined') r.declined += 1
+      if (g.rsvp_status === 'attending') {
+        r.attending += 1
+        r.attendees += g.attendee_count
+      }
+    }
+    const catRows = groups.map((x) => ({ ...x, ...byCat[x.key] }))
     return {
+      catRows,
       invites: active.length,
       total: active.reduce((n, g) => n + (g.allowed_guests || 1), 0),
       opened: active.filter((g) => g.opened_at || g.invitation_status === 'opened' || g.invitation_status === 'responded').length,
@@ -81,14 +100,99 @@ export function DashboardPage() {
       )}
 
       <div className="a-stats">
-        {cards.map(([label, value, note]) => (
-          <div className={`a-stat${label === 'Bring money to wedding' && s.bring.length ? ' a-stat--hot' : ''}`} key={label}>
-            <span className="a-stat__value">{loading ? '…' : value}</span>
-            <span className="a-stat__label">{label}</span>
-            {note && <span className="a-stat__note">{note}</span>}
-          </div>
-        ))}
+        {cards.map(([label, value, note]) => {
+          const isTotal = label === 'Total invitations'
+          const cls = `a-stat${label === 'Bring money to wedding' && s.bring.length ? ' a-stat--hot' : ''}${isTotal ? ' a-stat--btn' : ''}${isTotal && showTotals ? ' a-stat--active' : ''}`
+          const inner = (
+            <>
+              <span className="a-stat__value">{loading ? '…' : value}</span>
+              <span className="a-stat__label">{label}</span>
+              {note && <span className="a-stat__note">{note}</span>}
+              {isTotal && <span className="a-stat__note">{showTotals ? 'Hide details ▲' : 'Show details ▼'}</span>}
+            </>
+          )
+          return isTotal ? (
+            <button type="button" className={cls} key={label} aria-expanded={showTotals} aria-controls="total-details" onClick={() => setShowTotals((v) => !v)}>
+              {inner}
+            </button>
+          ) : (
+            <div className={cls} key={label}>
+              {inner}
+            </div>
+          )
+        })}
       </div>
+
+      {showTotals && (
+        <section className="a-card" id="total-details" aria-label="Invitation details by category">
+          <h2>Invitations by category</h2>
+          <p className="a-hint">
+            {s.invites} invitations covering {s.total} seats. Counts are for active invitations only. “Attending” shows invitations, with the number of people in brackets.
+          </p>
+          <div className="a-table-wrap a-table-wrap--scroll">
+            <table className="a-table a-table--wide">
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>Invitations</th>
+                  <th>Seats allowed</th>
+                  <th>Opened</th>
+                  <th>Responded</th>
+                  <th>Attending</th>
+                  <th>Declined</th>
+                  <th>Pending</th>
+                </tr>
+              </thead>
+              <tbody>
+                {s.catRows.map((r) => (
+                  <tr key={r.key}>
+                    <td>
+                      <strong>{r.label}</strong>
+                    </td>
+                    <td>{r.invites}</td>
+                    <td>{r.seats}</td>
+                    <td>{r.opened}</td>
+                    <td>{r.responded}</td>
+                    <td>
+                      {r.attending} ({r.attendees})
+                    </td>
+                    <td>{r.declined}</td>
+                    <td>{r.pending}</td>
+                  </tr>
+                ))}
+                <tr className="a-table__total">
+                  <td>
+                    <strong>Total</strong>
+                  </td>
+                  <td>
+                    <strong>{s.invites}</strong>
+                  </td>
+                  <td>
+                    <strong>{s.total}</strong>
+                  </td>
+                  <td>
+                    <strong>{s.opened}</strong>
+                  </td>
+                  <td>
+                    <strong>{s.responded}</strong>
+                  </td>
+                  <td>
+                    <strong>
+                      {s.attending} ({s.attendees})
+                    </strong>
+                  </td>
+                  <td>
+                    <strong>{s.declined}</strong>
+                  </td>
+                  <td>
+                    <strong>{s.pending}</strong>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      )}
 
       <section className="a-card">
         <h2>Gift preferences</h2>
