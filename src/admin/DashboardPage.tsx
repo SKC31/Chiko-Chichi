@@ -131,8 +131,8 @@ export function DashboardPage() {
             <p className="a-hint">
               {s.invites} invitations covering {s.total} seats. Counts are for active invitations only. “Attending” shows invitations, with the number of people in brackets.
             </p>
-            <div className="a-table-wrap a-table-wrap--scroll">
-              <table className="a-table a-table--wide">
+            <div className="a-table-wrap">
+              <table className="a-table a-table--cards">
                 <thead>
                   <tr>
                     <th>Category</th>
@@ -148,45 +148,45 @@ export function DashboardPage() {
                 <tbody>
                   {s.catRows.map((r) => (
                     <tr key={r.key}>
-                      <td>
+                      <td data-label="Category">
                         <strong>{r.label}</strong>
                       </td>
-                      <td>{r.invites}</td>
-                      <td>{r.seats}</td>
-                      <td>{r.opened}</td>
-                      <td>{r.responded}</td>
-                      <td>
+                      <td data-label="Invitations">{r.invites}</td>
+                      <td data-label="Seats allowed">{r.seats}</td>
+                      <td data-label="Opened">{r.opened}</td>
+                      <td data-label="Responded">{r.responded}</td>
+                      <td data-label="Attending">
                         {r.attending} ({r.attendees})
                       </td>
-                      <td>{r.declined}</td>
-                      <td>{r.pending}</td>
+                      <td data-label="Declined">{r.declined}</td>
+                      <td data-label="Pending">{r.pending}</td>
                     </tr>
                   ))}
                   <tr className="a-table__total">
-                    <td>
+                    <td data-label="Category">
                       <strong>Total</strong>
                     </td>
-                    <td>
+                    <td data-label="Invitations">
                       <strong>{s.invites}</strong>
                     </td>
-                    <td>
+                    <td data-label="Seats allowed">
                       <strong>{s.total}</strong>
                     </td>
-                    <td>
+                    <td data-label="Opened">
                       <strong>{s.opened}</strong>
                     </td>
-                    <td>
+                    <td data-label="Responded">
                       <strong>{s.responded}</strong>
                     </td>
-                    <td>
+                    <td data-label="Attending">
                       <strong>
                         {s.attending} ({s.attendees})
                       </strong>
                     </td>
-                    <td>
+                    <td data-label="Declined">
                       <strong>{s.declined}</strong>
                     </td>
-                    <td>
+                    <td data-label="Pending">
                       <strong>{s.pending}</strong>
                     </td>
                   </tr>
