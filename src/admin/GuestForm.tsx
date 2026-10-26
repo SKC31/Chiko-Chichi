@@ -1,7 +1,8 @@
 import { useState, type FormEvent } from 'react'
 import { friendlyError } from '@/lib/errors'
-import type { GuestInput, GuestRow } from '@/lib/types'
+import type { GuestCategory, GuestInput, GuestRow } from '@/lib/types'
 import { createGuest, updateGuest } from '@/services/admin'
+import { CATEGORY_OPTIONS } from './shared'
 
 const TITLES = ['Mr.', 'Mrs.', 'Ms.', 'Mr. & Mrs.', 'Dr.', 'Pastor', 'Rev.', 'The', 'Family']
 
@@ -20,6 +21,7 @@ export function GuestForm({ guest, onCancel, onSaved }: Props) {
     phone: guest?.phone ?? '',
     email: guest?.email ?? '',
     allowed_guests: guest?.allowed_guests ?? 1,
+    category: guest?.category ?? '',
   })
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
@@ -105,6 +107,18 @@ export function GuestForm({ guest, onCancel, onSaved }: Props) {
             value={f.allowed_guests}
             onChange={(e) => set('allowed_guests', Number(e.target.value))}
           />
+        </div>
+        <div className="a-field">
+          <label htmlFor="g-category">Category</label>
+          <select id="g-category" value={f.category} onChange={(e) => set('category', e.target.value as GuestCategory | '')}>
+            <option value="">Not set</option>
+            {CATEGORY_OPTIONS.map((o) => (
+              <option key={o.value} value={o.value}>
+                {o.label}
+              </option>
+            ))}
+          </select>
+          <p className="a-hint">Only visible to you. Used for table allocation; guests never see it.</p>
         </div>
       </div>
 

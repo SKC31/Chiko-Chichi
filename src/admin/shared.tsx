@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { defaultWedding } from '@/config/wedding'
 import { formatLongDate } from '@/lib/datetime'
 import { friendlyError } from '@/lib/errors'
-import type { GuestRow, GuestWithGift } from '@/lib/types'
+import type { GuestCategory, GuestRow, GuestWithGift } from '@/lib/types'
 
 /** The full invitation URL for a guest. */
 export function inviteUrl(code: string): string {
@@ -63,6 +63,18 @@ export const inviteBadge = (s: GuestRow['invitation_status']) =>
   ) : (
     <Badge tone="muted">Not sent</Badge>
   )
+
+export const CATEGORY_OPTIONS: { value: GuestCategory; label: string }[] = [
+  { value: 'brides_family', label: "Bride's family" },
+  { value: 'grooms_family', label: "Groom's family" },
+  { value: 'brides_friend', label: "Bride's friend" },
+  { value: 'grooms_friend', label: "Groom's friend" },
+]
+
+export const categoryLabel = (c: GuestCategory | null) => CATEGORY_OPTIONS.find((o) => o.value === c)?.label ?? 'Uncategorised'
+
+export const categoryBadge = (c: GuestCategory | null) =>
+  c ? <Badge tone={c.startsWith('brides') ? 'gold' : 'warn'}>{categoryLabel(c)}</Badge> : <span className="muted">—</span>
 
 export const giftLabel = (m: 'mobile_money' | 'bring_to_wedding') => (m === 'mobile_money' ? 'Mobile Money' : 'Bring Money to Wedding')
 

@@ -1,29 +1,32 @@
 import { useMemo, useState } from 'react'
 import { whatsAppLink } from '@/lib/phone'
-import type { GuestRow, GuestWithGift } from '@/lib/types'
+import type { GuestCategory, GuestRow, GuestWithGift } from '@/lib/types'
 import { deleteGuest, listGuests, markInvitationSent, setGuestActive } from '@/services/admin'
 import { GuestForm } from './GuestForm'
 import { InviteLinkPanel } from './InviteLinkPanel'
 import { Modal } from './Modal'
-import { Badge, ErrorBox, giftBadge, inviteBadge, inviteUrl, rsvpBadge, useLoad, whatsappText } from './shared'
+import { Badge, CATEGORY_OPTIONS, ErrorBox, categoryBadge, categoryLabel, giftBadge, inviteBadge, inviteUrl, rsvpBadge, useLoad, whatsappText } from './shared'
 
 type Mode = { kind: 'none' } | { kind: 'create' } | { kind: 'edit'; guest: GuestRow } | { kind: 'created'; guest: GuestRow }
 
 export function GuestsPage() {
   const { data, error, loading, reload } = useLoad(listGuests)
   const [q, setQ] = useState('')
+  const [cat, setCat] = useState<GuestCategory | 'all' | 'none'>('all')
   const [mode, setMode] = useState<Mode>({ kind: 'none' })
   const [copiedId, setCopiedId] = useState<string | null>(null)
   const [actionError, setActionError] = useState('')
 
   const rows = useMemo(() => {
     const term = q.trim().toLowerCase()
-    const all = data ?? []
+    const all = (data ?? []).filter((g) => (cat === 'all' ? true : cat === 'none' ? g.category === null : g.category === cat))
     if (!term) return all
     return all.filter((g) =>
-      [g.display_name, g.first_name, g.last_name, g.phone, g.email, g.invitation_code].some((v) => v?.toLowerCase().includes(term)),
+      [g.display_name, g.first_name, g.last_name, g.phone, g.email, g.invitation_code, g.category ? categoryLabel(g.category) : ''].some((v) =>
+        v?.toLowerCase().includes(term),
+      ),
     )
-  }, [data, q])
+  }, [data, q, cat])
 
   async function run(fn: () => Promise<void>) {
     setActionError('')
@@ -87,6 +90,21 @@ export function GuestsPage() {
         <input id="g-search" type="search" placeholder="Search by name, phone, email or code" value={q} onChange={(e) => setQ(e.target.value)} />
       </div>
 
+      <div className="a-field a-search">
+        <label htmlFor="g-cat-filter" className="sr-only">
+          Filter by category
+        </label>
+        <select id="g-cat-filter" value={cat} onChange={(e) => setCat(e.target.value as GuestCategory | 'all' | 'none')}>
+          <option value="all">All categories</option>
+          {CATEGORY_OPTIONS.map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
+          ))}
+          <option value="none">Uncategorised</option>
+        </select>
+      </div>
+
       {error && <ErrorBox message={error} onRetry={() => void reload()} />}
       {actionError && <ErrorBox message={actionError} />}
 
@@ -95,6 +113,7 @@ export function GuestsPage() {
           <thead>
             <tr>
               <th>Guest</th>
+              <th>Category</th>
               <th>Code</th>
               <th>Invitation</th>
               <th>RSVP</th>
@@ -110,6 +129,7 @@ export function GuestsPage() {
                   {!g.is_active && <Badge tone="muted">Deactivated</Badge>}
                   <div className="muted">{g.phone || g.email || 'No contact saved'}</div>
                 </td>
+                <td data-label="Category">{categoryBadge(g.category)}</td>
                 <td data-label="Code">
                   <code>{g.invitation_code}</code>
                 </td>

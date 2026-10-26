@@ -26,6 +26,7 @@ export async function createGuest(input: GuestInput): Promise<GuestRow> {
       phone: clean(input.phone),
       email: clean(input.email),
       allowed_guests: input.allowed_guests,
+      category: input.category === '' ? null : input.category,
     })
     .select()
     .single()
@@ -44,6 +45,7 @@ export async function updateGuest(id: string, input: GuestInput): Promise<GuestR
       phone: clean(input.phone),
       email: clean(input.email),
       allowed_guests: input.allowed_guests,
+      category: input.category === '' ? null : input.category,
     })
     .eq('id', id)
     .select()

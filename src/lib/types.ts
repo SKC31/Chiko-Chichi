@@ -3,6 +3,8 @@ export type InvitationStatus = 'pending' | 'sent' | 'opened' | 'responded'
 export type GiftMethod = 'mobile_money' | 'bring_to_wedding'
 export type GiftStatus = 'pending' | 'confirmed'
 export type WishStatus = 'pending' | 'approved' | 'rejected'
+/** Admin-only grouping, used for table allocation. Never exposed on the invitation. */
+export type GuestCategory = 'brides_family' | 'grooms_family' | 'grooms_friend' | 'brides_friend'
 
 /** What a guest may know about their own invitation (no phone / email / code). */
 export interface GuestGift {
@@ -48,6 +50,7 @@ export interface GuestRow {
   phone: string | null
   email: string | null
   allowed_guests: number
+  category: GuestCategory | null
   attendee_count: number
   rsvp_status: RsvpStatus
   invitation_status: InvitationStatus
@@ -92,4 +95,5 @@ export interface GuestInput {
   phone: string
   email: string
   allowed_guests: number
+  category: GuestCategory | ''
 }
